@@ -1,0 +1,60 @@
+-- Creating the CUSTOMER table
+CREATE TABLE CUSTOMER (
+    ID SERIAL PRIMARY KEY,
+    Surname VARCHAR(50),
+    Name VARCHAR(50),
+    Email VARCHAR(100),
+    PhoneNumber VARCHAR(20)
+);
+
+-- Creating the ORDER table
+CREATE TABLE ORDER (
+    OrderNumber SERIAL PRIMARY KEY,
+    IDCustomer INT,
+    TotalCost DECIMAL(10,2),
+    PurchaseDate DATE,
+    ExpectedDelivery DATE,
+    ActualDelivery DATE,
+    Address VARCHAR(255),
+    Returned BOOLEAN,
+    FOREIGN KEY (IDCustomer) REFERENCES CUSTOMER(ID)
+);
+
+-- Creating the RETURN table
+CREATE TABLE RETURN (
+    IDOrder INT PRIMARY KEY,
+    Approved BOOLEAN,
+    Refunded BOOLEAN,
+    FOREIGN KEY (IDOrder) REFERENCES ORDER(OrderNumber)
+);
+
+-- Creating the SECTOR table
+CREATE TABLE SECTOR (
+    Code SERIAL PRIMARY KEY,
+    Name VARCHAR(50),
+    Manager VARCHAR(50),
+    Location VARCHAR(50),
+    HeadTechnician VARCHAR(50)
+);
+
+-- Creating the PRODUCT table
+CREATE TABLE PRODUCT (
+    Code SERIAL PRIMARY KEY,
+    SectorCode INT,
+    Type VARCHAR(50),
+    Brand VARCHAR(50),
+    Description VARCHAR(255),
+    FOREIGN KEY (SectorCode) REFERENCES SECTOR(Code)
+);
+
+-- Creating the UNIT table
+CREATE TABLE UNIT (
+    SerialNumber SERIAL PRIMARY KEY,
+    Product INT,
+    Price DECIMAL(10,2),
+    ExpirationDate DATE,
+    Condition VARCHAR(50),
+    IDOrder INT,
+    FOREIGN KEY (Product) REFERENCES PRODUCT(Code),
+    FOREIGN KEY (IDOrder) REFERENCES ORDER(OrderNumber)
+);
