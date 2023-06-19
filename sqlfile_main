@@ -58,7 +58,26 @@ CREATE TABLE UNIT (
     FOREIGN KEY (IDOrder) REFERENCES "ORDER"(OrderNumber)
 );
 
--- I am done with the table creation, now lets put in some data from the best show in the world
+
+
+
+-- now we just wanna show off and write a trigger to update the totalcost
+CREATE OR REPLACE FUNCTION update_order_totalcost() RETURNS TRIGGER AS $$
+BEGIN
+  NEW.TotalCost = NEW.TotalCost + (SELECT Price FROM UNIT WHERE IDOrder = NEW.OrderNumber);
+  RETURN NEW;
+END;
+$$ LANGUAGE plpgsql;
+
+
+CREATE TRIGGER update_totalcost_trigger
+BEFORE INSERT OR UPDATE ON "ORDER"
+FOR EACH ROW EXECUTE PROCEDURE update_order_totalcost();
+
+
+
+
+-- We're done with the table creation, now lets put in some data from the best show in the world
 
 INSERT INTO CUSTOMER (Surname, Name, Email, PhoneNumber)
 VALUES 
@@ -98,8 +117,8 @@ VALUES
 INSERT INTO UNIT (Product, Price, ExpirationDate, Condition, IDOrder)
 VALUES
 ((SELECT Code FROM PRODUCT WHERE Type = 'Desktop PC'), 900.00, '2025-06-22', 'New', 4),
-((SELECT Code FROM PRODUCT WHERE Type = 'WiFi Router'), 99.99, '2024-06-23', 'New', 5),
-((SELECT Code FROM PRODUCT WHERE Type = 'Landline Phone'), 79.99, '2024-06-23', 'New', 5);
+((SELECT Code FROM PRODUCT WHERE Type = 'WiFi Router'), 99.99, '2024-06-23', 'New', 3),
+((SELECT Code FROM PRODUCT WHERE Type = 'Landline Phone'), 79.99, '2024-06-23', 'New', 3);
 
 -- lets say that Jim returned his smartphone and Dwight returned his laptop
 INSERT INTO "RETURN" (IDOrder, Approved, Refunded)
