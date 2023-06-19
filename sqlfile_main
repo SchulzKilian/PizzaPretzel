@@ -1,60 +1,59 @@
--- Creating the CUSTOMER table
+
 CREATE TABLE CUSTOMER (
     ID SERIAL PRIMARY KEY,
-    Surname VARCHAR(50),
-    Name VARCHAR(50),
-    Email VARCHAR(100),
+    Surname VARCHAR(50) NOT NULL,
+    Name VARCHAR(50) NOT NULL,
+    Email VARCHAR(100) NOT NULL,
     PhoneNumber VARCHAR(20)
 );
 
--- Creating the ORDER table
-CREATE TABLE ORDER (
+
+CREATE TABLE "ORDER" (
     OrderNumber SERIAL PRIMARY KEY,
-    IDCustomer INT,
-    TotalCost DECIMAL(10,2),
-    PurchaseDate DATE,
+    IDCustomer INT NOT NULL,
+    TotalCost DECIMAL(10,2) NOT NULL,
+    PurchaseDate DATE NOT NULL,
     ExpectedDelivery DATE,
     ActualDelivery DATE,
     Address VARCHAR(255),
-    Returned BOOLEAN,
     FOREIGN KEY (IDCustomer) REFERENCES CUSTOMER(ID)
 );
 
--- Creating the RETURN table
-CREATE TABLE RETURN (
+
+CREATE TABLE "RETURN" (
     IDOrder INT PRIMARY KEY,
     Approved BOOLEAN,
-    Refunded BOOLEAN,
-    FOREIGN KEY (IDOrder) REFERENCES ORDER(OrderNumber)
+    Refunded BOOLEAN NOT NULL,
+    FOREIGN KEY (IDOrder) REFERENCES "ORDER"(OrderNumber)
 );
 
--- Creating the SECTOR table
+
 CREATE TABLE SECTOR (
-    Code SERIAL PRIMARY KEY,
-    Name VARCHAR(50),
+    Code CHAR(1) PRIMARY KEY,
+    Name VARCHAR(50) NOT NULL,
     Manager VARCHAR(50),
     Location VARCHAR(50),
     HeadTechnician VARCHAR(50)
 );
 
--- Creating the PRODUCT table
+
 CREATE TABLE PRODUCT (
     Code SERIAL PRIMARY KEY,
-    SectorCode INT,
-    Type VARCHAR(50),
+    SectorCode CHAR(1) NOT NULL,
+    Type VARCHAR(50) NOT NULL,
     Brand VARCHAR(50),
     Description VARCHAR(255),
     FOREIGN KEY (SectorCode) REFERENCES SECTOR(Code)
 );
 
--- Creating the UNIT table
+
 CREATE TABLE UNIT (
     SerialNumber SERIAL PRIMARY KEY,
-    Product INT,
-    Price DECIMAL(10,2),
-    ExpirationDate DATE,
-    Condition VARCHAR(50),
+    Product INT NOT NULL,
+    Price DECIMAL(10,2) NOT NULL,
+    ExpirationDate DATE NOT NULL,
+    Condition VARCHAR(50) NOT NULL,
     IDOrder INT,
     FOREIGN KEY (Product) REFERENCES PRODUCT(Code),
-    FOREIGN KEY (IDOrder) REFERENCES ORDER(OrderNumber)
+    FOREIGN KEY (IDOrder) REFERENCES "ORDER"(OrderNumber)
 );
