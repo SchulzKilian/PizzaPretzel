@@ -39,7 +39,7 @@ CREATE TABLE SECTOR (
 
 CREATE TABLE PRODUCT (
     Code SERIAL PRIMARY KEY,
-    SectorCode CHAR(1) NOT NULL,
+    SectorCode CHAR(1) DEFAULT 'A',
     Type VARCHAR(50) NOT NULL,
     Brand VARCHAR(50),
     Description VARCHAR(255),
@@ -57,3 +57,52 @@ CREATE TABLE UNIT (
     FOREIGN KEY (Product) REFERENCES PRODUCT(Code),
     FOREIGN KEY (IDOrder) REFERENCES "ORDER"(OrderNumber)
 );
+
+-- I am done with the table creation, now lets put in some data from the best show in the world
+
+INSERT INTO CUSTOMER (Surname, Name, Email, PhoneNumber)
+VALUES 
+('Halpert', 'Jim', 'jim.halpert@dundermifflin.com', '123-456-7890'),
+('Beesly', 'Pam', 'pam.beesly@dundermifflin.com', '098-765-4321'),
+('Schrute', 'Dwight', 'dwight.schrute@dundermifflin.com', '567-890-1234'),
+('Martin', 'Angela', 'angela.martin@dundermifflin.com', '789-012-3456'),
+('Bernard', 'Andy', 'andy.bernard@dundermifflin.com', '345-678-9012');
+
+
+INSERT INTO SECTOR (Code, Name, Manager, Location, HeadTechnician)
+VALUES
+('A', 'Electronics', 'Jim Halpert', 'Scranton', 'Pam Beesly'),
+('B', 'Computer Hardware', 'Dwight Schrute', 'Scranton', 'Angela Martin'),
+('C', 'Telecommunications', 'Andy Bernard', 'Scranton', 'Erin Hannon');
+
+
+INSERT INTO PRODUCT (SectorCode, Type, Brand, Description)
+VALUES
+('A', 'Smartphone', 'FruitBrand', 'Latest smartphone from FruitBrand'),
+('A', 'Tablet', 'FruitBrand', 'High resolution display tablet'),
+('B', 'Laptop', 'DellTop', 'Powerful laptop for professional use'),
+('B', 'Desktop PC', 'HPower', 'Reliable desktop PC with high performance'),
+('C', 'WiFi Router', 'NetStrong', 'Long-range WiFi router'),
+('C', 'Landline Phone', 'TeleCom', 'Cordless landline phone for office use');
+
+
+-- Insert into "ORDER" table
+INSERT INTO "ORDER" (IDCustomer, TotalCost, PurchaseDate)
+VALUES
+((SELECT ID FROM CUSTOMER WHERE Name = 'Jim' AND Surname = 'Halpert'), 999.99, '2023-06-19'),
+((SELECT ID FROM CUSTOMER WHERE Name = 'Pam' AND Surname = 'Beesly'), 499.99, '2023-06-20'),
+((SELECT ID FROM CUSTOMER WHERE Name = 'Dwight' AND Surname = 'Schrute'), 1200.00, '2023-06-21'),
+((SELECT ID FROM CUSTOMER WHERE Name = 'Angela' AND Surname = 'Martin'), 900.00, '2023-06-22'),
+((SELECT ID FROM CUSTOMER WHERE Name = 'Andy' AND Surname = 'Bernard'), 99.99, '2023-06-23');
+
+INSERT INTO UNIT (Product, Price, ExpirationDate, Condition, IDOrder)
+VALUES
+((SELECT Code FROM PRODUCT WHERE Type = 'Desktop PC'), 900.00, '2025-06-22', 'New', 4),
+((SELECT Code FROM PRODUCT WHERE Type = 'WiFi Router'), 99.99, '2024-06-23', 'New', 5),
+((SELECT Code FROM PRODUCT WHERE Type = 'Landline Phone'), 79.99, '2024-06-23', 'New', 5);
+
+-- lets say that Jim returned his smartphone and Dwight returned his laptop
+INSERT INTO "RETURN" (IDOrder, Approved, Refunded)
+VALUES
+(1, FALSE, FALSE),
+(3, TRUE, TRUE);
