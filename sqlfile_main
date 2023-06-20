@@ -53,7 +53,7 @@ CREATE TABLE UNIT (
     FOREIGN KEY (IDOrder) REFERENCES "ORDER"(OrderNumber)
 );
 
-ALTER TABLE UNIT ALTER COLUMN ExpirationDate DROP NOT NULL;
+
 
 -- We're done with the table creation, now lets put in some data from the best show in the world
 
