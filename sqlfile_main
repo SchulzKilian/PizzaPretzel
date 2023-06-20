@@ -10,8 +10,8 @@ CREATE TABLE CUSTOMER (
 CREATE TABLE "ORDER" (
     OrderNumber SERIAL PRIMARY KEY,
     IDCustomer INT NOT NULL,
-    TotalCost DECIMAL(10,2) NOT NULL,
-    PurchaseDate DATE NOT NULL,
+    TotalCost DECIMAL(10,2) DEFAULT 0,
+    PurchaseDate DATE DEFAULT NOW(),
     ExpectedDelivery DATE,
     ActualDelivery DATE,
     Address VARCHAR(255),
