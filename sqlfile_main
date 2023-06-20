@@ -54,6 +54,26 @@ CREATE TABLE UNIT (
 );
 
 
+CREATE OR REPLACE FUNCTION update_order_total_cost()
+    RETURNS TRIGGER AS
+$$
+BEGIN
+    IF NEW.idorder IS NOT NULL THEN
+        UPDATE "ORDER"
+        SET TotalCost = TotalCost + (SELECT Price FROM UNIT WHERE idorder = NEW.idorder)
+        WHERE OrderNumber = NEW.idorder;
+    END IF;
+    RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql;
+
+CREATE TRIGGER unit_idorder_update_trigger
+AFTER UPDATE OF idorder ON UNIT
+FOR EACH ROW
+EXECUTE FUNCTION update_order_total_cost();
+
+
 
 -- We're done with the table creation, now lets put in some data from the best show in the world
 
