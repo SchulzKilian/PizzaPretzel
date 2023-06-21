@@ -60,7 +60,7 @@ $$
 BEGIN
     IF NEW.idorder IS NOT NULL THEN
         UPDATE "ORDER"
-        SET TotalCost = TotalCost + (SELECT Price FROM UNIT WHERE idorder = NEW.idorder)
+        SET TotalCost = TotalCost + (SELECT Price FROM UNIT WHERE serialnumber = NEW.serialnumber)
         WHERE OrderNumber = NEW.idorder;
     END IF;
     RETURN NEW;
