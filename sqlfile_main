@@ -161,12 +161,10 @@ VALUES
 ((SELECT ID FROM CUSTOMER WHERE "name" = 'Dwight' AND Surname = 'Schrute'), 0.00, '2023-06-21');
 
 --Jim Halpert Orders a CPU i9 and a RAM32GB
-update "unit" set "idorder" = (select "ordernumber" 
-							   from "ORDER" where "idcustomer" = 
-							  (select "id" from customer where "name" = 'Jim' and "surname" = 'Halpert'))
-where "serialnumber" = 
+update "unit" set "idorder" = (select "ordernumber" from "ORDER" where "idcustomer" = (select "id" from customer where "name" = 'Jim' and "surname" = 'Halpert'))
+where "serialnumber" is in
 (select "serialnumber" from "unit" where "product" =
-(select "code" from "product" where "type" = 'CPU i9') is NULL limit 1) or 
+(select "code" from "product" where "type" = 'CPU i9') is NULL limit 2) or 
 "serialnumber" = 
 (select "serialnumber" from "unit" where "product" =
 (select "code" from "product" where "type" = 'RAM 32GB') and idorder is NULL limit 1);
