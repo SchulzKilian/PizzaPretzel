@@ -163,7 +163,7 @@ VALUES
 --Jim Halpert Orders a CPU i9 and a RAM32GB
 update "unit" set "idorder" = (select "ordernumber" from "ORDER" where "idcustomer" = (select "id" from customer where "name" = 'Jim' and "surname" = 'Halpert'))
 where "serialnumber"  in
-(select "serialnumber" from "unit" where "product" =
+(select "serialnumber" from "unit" where "product" in 
 (select "code" from "product" where "type" = 'CPU i9') is NULL limit 2) or 
 "serialnumber" = 
 (select "serialnumber" from "unit" where "product" =
